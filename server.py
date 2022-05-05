@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import asyncio
 import base64
@@ -25,10 +25,10 @@ async def hello(websocket, path):
     # Send the simulation payload
     await websocket.send(json.dumps({
         "type": "start",
-        "elf": base64_file('{}/wokwi/dummy.elf'.format(os.getcwd())),
+        "elf": base64_file('{}/blink.elf'.format(os.getcwd())),
         "espBin": [
-            [0x0000, base64_file('{}/wokwi/esp32c3_bootloader.bin'.format(os.getcwd()))],
-            [0x8000, base64_file('{}/wokwi/esp32c3_partition-table.bin'.format(os.getcwd()))],
+            [0x0000, base64_file('{}/bootloader.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [0x8000, base64_file('{}/partition-table.bin'.format(os.getenv('CURRENT_PROJECT')))],
             [0x10000, base64_file('{}/app.bin'.format(os.getenv('CURRENT_PROJECT')))],
         ]
     }))
