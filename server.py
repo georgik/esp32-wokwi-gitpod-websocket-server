@@ -48,12 +48,13 @@ asyncio.get_event_loop().run_until_complete(start_server)
 # ESP32-C3-DevKitC-02
 # board = 325149339656651346
 # ESP32C3 Rust Board
-board = 328638850887844436
+board = os.getenv('WOKWI_PROJECT_ID')
 if "intro/hardware-check" in os.getenv('CURRENT_PROJECT') or "intro/mqtt" in os.getenv('CURRENT_PROJECT') or "advanced/button-interrupt" in os.getenv('CURRENT_PROJECT'):
     # ESP32C3 Rust Board with Neopixel
     board = 328904135759888980
 elif "advanced/i2c-driver" in os.getenv('CURRENT_PROJECT'):
     board = 329811477748777556
+
 if(os.getenv('USER') == "gitpod"):
     gp_url = subprocess.getoutput("gp url {}".format(PORT))
     gp_url = gp_url[8:]
