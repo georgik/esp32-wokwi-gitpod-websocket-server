@@ -27,9 +27,9 @@ async def hello(websocket, path):
         "type": "start",
         "elf": base64_file('{}/blink.elf'.format(os.getcwd())),
         "espBin": [
-            [0x0000, base64_file('{}/bootloader.bin'.format(os.getenv('CURRENT_PROJECT')))],
-            [0x8000, base64_file('{}/partition-table.bin'.format(os.getenv('CURRENT_PROJECT')))],
-            [0x10000, base64_file('{}/app.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [os.getenv('ESP_BOOTLOADER_OFFSET', 0x0000), base64_file('{}/bootloader.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [os.getenv('ESP_PARTITION_TABLE_OFFSET', 0x8000), base64_file('{}/partition-table.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [os.getenv('ESP_APP_OFFSET', 0x10000), base64_file('{}/app.bin'.format(os.getenv('CURRENT_PROJECT')))],
         ]
     }))
 
