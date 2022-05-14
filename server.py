@@ -24,17 +24,13 @@ gdb_server = GDBServer()
 async def handle_client(websocket, path):
     msg = await websocket.recv()
     print("Client connected! {}".format(msg))
-    arch="xtensa-esp32-espidf"
-    if (os.getenv('ESP_BOARD') == "esp32c3"):
-        arch="riscv32imc-esp-espidf"
+
     # Send the simulation payload
     await websocket.send(json.dumps({
         "type": "start",
-        "elf": base64_file('target/{}/debug/{}'.format(arch, os.getenv('CURRENT_PROJECT'))),
+        "elf": base64_file('target/{}/debug/{}'.format(os.getenv('ESP_ARCH'), os.getenv('CURRENT_PROJECT'))),
         "espBin": [
-            [os.getenv('ESP_BOOTLOADER_OFFSET', 0x0000), base64_file('bootloader.bin')],
-            [os.getenv('ESP_PARTITION_TABLE_OFFSET', 0x8000), base64_file('partition-table.bin')],
-            [os.getenv('ESP_APP_OFFSET', 0x10000), base64_file('app.bin')],
+            [0x0000, base64_file('app.bin')],
         ]
     }))
 
