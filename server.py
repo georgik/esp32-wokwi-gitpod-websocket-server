@@ -21,6 +21,19 @@ def base64_file(path: str):
 
 gdb_server = GDBServer()
 
+def get_esp_bin():
+    if os.getenv('ESP_APP_MODE' = 'merged-file'):
+        return [
+            [os.getenv('ESP_APP_OFFSET', 0x0000, base64_file('app.bin')],
+        ]
+
+    # ESP_APP_MODE = 'multiple-files'
+    return [
+            [os.getenv('ESP_BOOTLOADER_OFFSET', 0x0000), base64_file('{}/bootloader.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [os.getenv('ESP_PARTITION_TABLE_OFFSET', 0x8000), base64_file('{}/partition-table.bin'.format(os.getenv('CURRENT_PROJECT')))],
+            [os.getenv('ESP_APP_OFFSET', 0x10000), base64_file('{}/app.bin'.format(os.getenv('CURRENT_PROJECT')))],
+        ]
+
 async def handle_client(websocket, path):
     msg = await websocket.recv()
     print("Client connected! {}".format(msg))
@@ -29,9 +42,7 @@ async def handle_client(websocket, path):
     await websocket.send(json.dumps({
         "type": "start",
         "elf": base64_file('target/{}/debug/{}'.format(os.getenv('ESP_ARCH'), os.getenv('CURRENT_PROJECT'))),
-        "espBin": [
-            [0x0000, base64_file('app.bin')],
-        ]
+        "espBin": get_esp_bin()
     }))
 
     gdb_server.on_gdb_message = lambda msg: websocket.send(
